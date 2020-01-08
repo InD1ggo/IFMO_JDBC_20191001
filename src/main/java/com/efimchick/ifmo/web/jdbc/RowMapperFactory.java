@@ -4,7 +4,6 @@ import com.efimchick.ifmo.web.jdbc.domain.Employee;
 import com.efimchick.ifmo.web.jdbc.domain.FullName;
 import com.efimchick.ifmo.web.jdbc.domain.Position;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
