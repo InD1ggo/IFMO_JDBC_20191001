@@ -15,34 +15,43 @@ import com.efimchick.ifmo.web.jdbc.domain.Position;
 public class SetMapperFactory {
 
     public SetMapper<Set<Employee>> employeesSetMapper() {
-        return new SetMapper<Set<Employee>>() {
-            @Override
-            public Set<Employee> mapSet(ResultSet resultSet) {
-                Set<Employee> employees = new HashSet<>();
-                while (true) {
-                    try {
-                        if (!resultSet.next()) break;
-                        employees.add(
-                                getManager(resultSet, resultSet.getBigDecimal("MANAGER"))
-                        );
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-
+        return resultSet -> {
+            Set<Employee> employees = new HashSet<>();
+            while (true) {
+                try {
+                    if (!resultSet.next()) break;
+                    employees.add(
+                            new Employee(
+                                    resultSet.getBigDecimal("ID").toBigInteger(),
+                                    new FullName(
+                                            resultSet.getString("FIRSTNAME"),
+                                            resultSet.getString("LASTNAME"),
+                                            resultSet.getString("MIDDLENAME")
+                                    ),
+                                    Position.valueOf(resultSet.getString("POSITION")),
+                                    LocalDate.parse(resultSet.getString("HIREDATE")),
+                                    resultSet.getBigDecimal("SALARY"),
+                                    getWithManager(resultSet, resultSet.getBigDecimal("MANAGER"))
+                            )
+                    );
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-                return employees;
             }
+            return employees;
         };
     }
 
-    public Employee getManager(ResultSet rs, BigDecimal managerId) throws SQLException {
-        if (!managerId.equals(BigDecimal.ZERO)) {
+    public Employee getWithManager(ResultSet rs, BigDecimal managerId) throws SQLException {
+        Employee thisManager = null;
+        if (managerId != null) {
             int rowId = rs.getRow();
             BigInteger manager = managerId.toBigInteger();
             rs.beforeFirst();
+
             while (rs.next()) {
                 if (rs.getBigDecimal("ID").toBigInteger().equals(manager)) {
-                    return new Employee(
+                    thisManager = new Employee(
                             rs.getBigDecimal("ID").toBigInteger(),
                             new FullName(
                                     rs.getString("FIRSTNAME"),
@@ -52,12 +61,13 @@ public class SetMapperFactory {
                             Position.valueOf(rs.getString("POSITION")),
                             LocalDate.parse(rs.getString("HIREDATE")),
                             rs.getBigDecimal("SALARY"),
-                            getManager(rs, rs.getBigDecimal("MANAGER"))
+                            getWithManager(rs, rs.getBigDecimal("MANAGER"))
                     );
                 }
             }
+
             rs.absolute(rowId);
         }
-        return null;
+        return thisManager;
     }
 }
