@@ -1,17 +1,11 @@
 package com.efimchick.ifmo.web.jdbc.dao;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.efimchick.ifmo.web.jdbc.domain.Department;
 import com.efimchick.ifmo.web.jdbc.domain.Employee;
-import com.efimchick.ifmo.web.jdbc.domain.FullName;
-import com.efimchick.ifmo.web.jdbc.domain.Position;
 
 public class SetMapperFactory {
 
