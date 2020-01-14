@@ -5,7 +5,6 @@ import com.efimchick.ifmo.web.jdbc.dao.EmployeeDao;
 import com.efimchick.ifmo.web.jdbc.domain.Department;
 import com.efimchick.ifmo.web.jdbc.domain.Employee;
 
-import java.util.Collections;
 import java.util.List;
 
 public class ServiceFactory {
@@ -82,29 +81,14 @@ public class ServiceFactory {
 
             @Override
             public Employee getTopNthBySalaryByDepartment(int salaryRank, Department department) {
-                System.out.println("SALARY RANK: " + salaryRank + " | FOR DEPARTMENT: " + department.getId());
-                Paging paging = new Paging(1, 100);
-                List<Employee> topNth = getByDepartmentSortBySalary(department, paging);
-                Collections.reverse(topNth);
+                List<Employee> topNth = daoEmployee.getByDepartment(department, "ORDER BY SALARY DESC");
                 return topNth.get(salaryRank - 1);
             }
 
             private List<Employee> getPage(List<Employee> employees, Paging paging) {
-                System.out.println(String.format("Page %d | ItemPerPage %d", paging.page, paging.itemPerPage));
-                int fromIndex = (paging.page - 1) * paging.itemPerPage;
-                int toIndex = Math.min(paging.page * paging.itemPerPage, employees.size());
-                System.out.println(
-                        String.format("FromIndex %d | ToIndex %d | Size %d", fromIndex, toIndex, employees.size())
-                );
-                System.out.println("===================================");
-                return employees.subList(fromIndex, toIndex);
-            }
-
-            private void printPage(List<Employee> page) {
-                for (Employee e :
-                        page) {
-                    System.out.println("\t" + e);
-                }
+                return employees.subList(
+                        (paging.page - 1) * paging.itemPerPage,
+                        Math.min(paging.page * paging.itemPerPage, employees.size()));
             }
         };
     }

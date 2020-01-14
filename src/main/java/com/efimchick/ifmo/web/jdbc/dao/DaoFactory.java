@@ -106,7 +106,7 @@ public class DaoFactory {
             public Employee save(Employee employee) {
                 try (Connection connection = cns.createConnection();
                      Statement statement = connection.createStatement()) {
-                    int update = statement.executeUpdate(
+                    statement.executeUpdate(
                             "" + "INSERT INTO EMPLOYEE VALUES ("
                                     + employee.getId() + ", " +
                                     "'" + employee.getFullName().getFirstName() + "', " +
@@ -132,7 +132,7 @@ public class DaoFactory {
             public void delete(Employee employee) {
                 try (Connection connection = cns.createConnection();
                      Statement statement = connection.createStatement()) {
-                    int update = statement.executeUpdate("DELETE FROM EMPLOYEE WHERE ID = " + employee.getId());
+                    statement.executeUpdate("DELETE FROM EMPLOYEE WHERE ID = " + employee.getId());
                 } catch (SQLException ignored) {
                 }
             }
@@ -173,7 +173,7 @@ public class DaoFactory {
                         delete(department);
                         save(department);
                     } else {
-                        int update = statement.executeUpdate("INSERT INTO DEPARTMENT VALUES " +
+                        statement.executeUpdate("INSERT INTO DEPARTMENT VALUES " +
                                 department.getId().toString() + ", '" +
                                 department.getName() + "', '" +
                                 department.getLocation() + "'");
@@ -188,7 +188,7 @@ public class DaoFactory {
             public void delete(Department department) {
                 try (Connection connection = cns.createConnection();
                      Statement statement = connection.createStatement()) {
-                    int update = statement.executeUpdate("DELETE FROM DEPARTMENT WHERE ID = " + department.getId());
+                    statement.executeUpdate("DELETE FROM DEPARTMENT WHERE ID = " + department.getId());
                 } catch (SQLException ignored) {
                 }
             }
